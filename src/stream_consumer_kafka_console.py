@@ -78,9 +78,12 @@ def main():
     print("Parsed transaction schema:")
     parsed_df.printSchema()
 
+    high_risk_df = parsed_df.filter(col("is_high_risk") == 1)
+
+
     # 2) Simple streaming sink: write to console
     query = (
-        parsed_df
+        high_risk_df
         .writeStream
         .format("console")
         .option("truncate", "false")
