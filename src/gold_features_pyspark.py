@@ -50,6 +50,7 @@ def main():
             F_sum(
                 when(col("is_high_risk") == 1, 1).otherwise(0)
             ).alias("high_risk_tx_count"),
+            F_max("risk_score").alias("max_risk_score"),
         )
     )
 
@@ -64,6 +65,10 @@ def main():
             "is_card_high_risk_day",
             when(col("high_risk_ratio") >= 0.3, 1).otherwise(0)
         )
+        .withColumn(
+            "has_extreme_risk",
+            when(col("max_risk_score") >= 0.9, 1).otherwise(0)
+)
     )
 
     print("=== Gold Features Schema ===")
